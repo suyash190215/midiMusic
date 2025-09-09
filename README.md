@@ -1,4 +1,4 @@
-# AI Music Composer oo
+# LSTM-Based Generative Music Model
 
 This project features an **LSTM-based music generation model** built using PyTorch. The model was trained on the **Maestro v3.0.0 dataset**, which consists of over 1,200 classical piano pieces in MIDI format. Our goal was to create a system that could automatically compose original musical pieces with realistic note transitions.
 
