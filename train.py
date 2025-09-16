@@ -1,4 +1,3 @@
-# train.py
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -6,12 +5,10 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import gc
 
-# Project imports
 from data_processing import MIDIProcessor, MusicDataset, find_midi_files
 from model import LSTMMusicGenerator
 from utils import plot_training_loss, notes_to_midi
 
-# --- Configuration ---
 SEQUENCE_LENGTH = 100
 BATCH_SIZE = 64
 EMBEDDING_DIM = 128
@@ -20,7 +17,7 @@ NUM_LAYERS = 3
 DROPOUT = 0.3
 LEARNING_RATE = 0.001
 NUM_EPOCHS = 20
-MAX_FILES = 200  # Limit files for faster training/memory constraints. Set to None to use all files.
+MAX_FILES = 200  
 DATASET_DIR = "./maestro-v3.0.0"
 MODEL_SAVE_PATH = "lstm_music_generator.pth"
 
@@ -63,7 +60,6 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
 
-    # 1. Data Processing
     midi_files = find_midi_files(DATASET_DIR)
     if not midi_files:
         print(f"No MIDI files found in '{DATASET_DIR}'. Please run download_dataset.sh")
@@ -81,7 +77,6 @@ def main():
     dataset = MusicDataset(sequences, targets)
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    # 2. Model Initialization
     model = LSTMMusicGenerator(
         vocab_size=processor.vocab_size,
         embedding_dim=EMBEDDING_DIM,
@@ -94,11 +89,9 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    # 3. Training
     train_losses = train_model(model, dataloader, criterion, optimizer, NUM_EPOCHS, device)
     plot_training_loss(train_losses)
     
-    # 4. Save the final model and processor
     torch.save({
         'model_state_dict': model.state_dict(),
         'processor': processor,
